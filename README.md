@@ -1,7 +1,8 @@
 
 
 # Deploy Starbucks Clone Application AWS using DevSecOps Approach
-https://github.com/peace2019/DevOpsProjectStare/issues/1#issue-2888892151
+<img width="966" alt="Screenshot 2024-09-15 at 7 20 49 AM" src="[https://github.com/user-attachments/assets/ddb5e618-79ab-49b3-8f13-b5114824eec3](https://github.com/peace2019/DevOpsProjectStare/issues/1#issue-2888892151)">
+
  
 # **Install Jenkins on Ubuntu:**
 
