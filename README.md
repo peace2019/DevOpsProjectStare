@@ -1,6 +1,6 @@
 
 
-# Deploy Starbucks Clone Application AWS using DevSecOps Approach
+# Deploy Starbucks Clone Application  using DevSecOps Approach
 <img width="940" alt="Image" src="https://github.com/user-attachments/assets/d92e14ca-9b1c-4e0c-bb80-cb85b208f924" />
 
  
