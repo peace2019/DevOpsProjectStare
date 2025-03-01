@@ -1,15 +1,7 @@
 
 
 # Deploy Starbucks Clone Application AWS using DevSecOps Approach
-https://app.eraser.io/workspace/59NJfCay26dUMl5YAlFl?origin=share
 
-# **Install AWS CLI**
-```
-sudo apt install unzip -y
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-```
  
 # **Install Jenkins on Ubuntu:**
 
@@ -51,18 +43,6 @@ newgrp docker
 sudo systemctl status docker
 ```
 
-# **Install Trivy on Ubuntu:**
-
-Reference Doc: https://aquasecurity.github.io/trivy/v0.55/getting-started/installation/
-```
-sudo apt-get install wget apt-transport-https gnupg
-wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-sudo apt-get update
-sudo apt-get install trivy
-```
-
-
 # **Install Docker Scout:**
 ```
 docker login       `Give Dockerhub credentials here`
@@ -93,14 +73,14 @@ pipeline {
         }
         stage ("Git checkout") {
             steps {
-                git branch: 'main', url: 'https://github.com/yeshwanthlm/starbucks.git'
+                git branch: 'main', url: 'https://github.com/peace2019/DevOpsProjectStare.git'
             }
         }
         stage("Sonarqube Analysis "){
             steps{
                 withSonarQubeEnv('sonar-server') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=starbucks \
-                    -Dsonar.projectKey=starbucks '''
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=star \
+                    -Dsonar.projectKey=star '''
                 }
             }
         }
@@ -129,15 +109,15 @@ pipeline {
         }
         stage ("Build Docker Image") {
             steps {
-                sh "docker build -t starbucks ."
+                sh "docker build -t star ."
             }
         }
         stage ("Tag & Push to DockerHub") {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag starbucks amonkincloud/starbucks:latest "
-                        sh "docker push amonkincloud/starbucks:latest "
+                        sh "docker tag starbucks peace2019/DevOpsProjectStare:latest "
+                        sh "docker push peace2019/DevOpsProjectStare:latest "
                     }
                 }
             }
@@ -146,16 +126,16 @@ pipeline {
             steps {
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview amonkincloud/starbucks:latest'
-                       sh 'docker-scout cves amonkincloud/starbucks:latest'
-                       sh 'docker-scout recommendations amonkincloud/starbucks:latest'
+                       sh 'docker-scout quickview peace2019/DevOpsProjectStare:latest'
+                       sh 'docker-scout cves peace2019/DevOpsProjectStare:latest'
+                       sh 'docker-scout recommendations peace2019/DevOpsProjectStare:latest'
                    }
                 }
             }
         }
         stage ("Deploy to Conatiner") {
             steps {
-                sh 'docker run -d --name starbucks -p 3000:3000 amonkincloud/starbucks:latest'
+                sh 'docker run -d --name star -p 3000:3000 peace2019/DevOpsProjectStare:latest'
             }
         }
     }
