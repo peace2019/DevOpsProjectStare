@@ -52,7 +52,7 @@ docker login       `Give Dockerhub credentials here`
 curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s -- -b /usr/local/bin
 ```
 # Deployment Stages:
-img width="966" alt="Image" src="https://github.com/user-attachments/assets/ac2998c1-8e46-4afe-8d80-43b467136946" / > ">
+< img width="966" alt="Image" src="https://github.com/user-attachments/assets/ac2998c1-8e46-4afe-8d80-43b467136946" / > ">
 
 # Jenkins Complete pipeline
 ```
