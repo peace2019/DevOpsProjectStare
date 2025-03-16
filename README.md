@@ -57,7 +57,7 @@ curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | 
 # Jenkins Complete pipeline
 ```
 pipeline {
-    agent { label 'k8stest'}
+    agent { label 'k8sTest'}
     
     tools {
         jdk 'jdk17'
