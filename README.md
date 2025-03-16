@@ -57,88 +57,79 @@ curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | 
 # Jenkins Complete pipeline
 ```
 pipeline {
-    agent any
+    agent { label 'k8stest'}
+    
     tools {
         jdk 'jdk17'
-        nodejs 'node16'
+        nodejs 'node23'
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
     }
+    
     stages {
         stage ("clean workspace") {
             steps {
                 cleanWs()
             }
         }
+        
         stage ("Git checkout") {
             steps {
                 git branch: 'main', url: 'https://github.com/peace2019/DevOpsProjectStare.git'
             }
         }
-        stage("Sonarqube Analysis "){
-            steps{
-                withSonarQubeEnv('sonar-server') {
+        stage('SonarQube Analysis') {
+            steps {
+              withSonarQubeEnv('sonar-server') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=star \
                     -Dsonar.projectKey=star '''
                 }
             }
         }
-        stage("quality gate"){
-           steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
-                }
-            } 
-        }
+    
         stage("Install NPM Dependencies") {
             steps {
                 sh "npm install"
             }
         }
-        stage('OWASP FS SCAN') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
-        stage ("Trivy File Scan") {
-            steps {
-                sh "trivy fs . > trivy.txt"
-            }
-        }
+    
         stage ("Build Docker Image") {
             steps {
                 sh "docker build -t star ."
             }
         }
+    
         stage ("Tag & Push to DockerHub") {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag starbucks peace2019/DevOpsProjectStare:latest "
-                        sh "docker push peace2019/DevOpsProjectStare:latest "
+                    withDockerRegistry(credentialsId: 'docker-cerd') {
+                        sh "docker tag star peacechouaib/devopsprojectstare:latest"
+                        sh " docker push peacechouaib/devopsprojectstare:latest"
                     }
                 }
             }
         }
-        stage('Docker Scout Image') {
+
+        stage ("Deploy to Container") {
             steps {
-                script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview peace2019/DevOpsProjectStare:latest'
-                       sh 'docker-scout cves peace2019/DevOpsProjectStare:latest'
-                       sh 'docker-scout recommendations peace2019/DevOpsProjectStare:latest'
-                   }
+                script {
+                    sh 'docker pull peacechouaib/devopsprojectstare:latest'
+                    sh 'docker run -d --restart=always --name star -p 3000:3000 peacechouaib/devopsprojectstare:latest'
                 }
             }
         }
-        stage ("Deploy to Conatiner") {
-            steps {
-                sh 'docker run -d --name star -p 3000:3000 peace2019/DevOpsProjectStare:latest'
-            }
+    }
+    
+    post {
+        success {
+            echo "✅ Build and deployment successful!"
+        }
+        failure {
+            echo "❌ Build or deployment failed. Check logs for details."
         }
     }
+}
     post {
     always {
         emailext attachLog: true,
