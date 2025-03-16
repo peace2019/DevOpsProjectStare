@@ -2,7 +2,10 @@
 FROM node:alpine
 
 # تثبيت الأدوات الأساسية مثل bash و curl وتثبيت TypeScript بشكل عالمي
-RUN apk update && apk add --no-cache bash curl && npm install -g typescript
+RUN echo "http://dl-2.alpinelinux.org/alpine/v3.21/main" > /etc/apk/repositories \
+    && apk update && apk add --no-cache bash curl && npm install -g typescript
+
+# RUN apk update && apk add --no-cache bash curl && npm install -g typescript
 
 # Create and set the working directory inside the container
 WORKDIR /app
