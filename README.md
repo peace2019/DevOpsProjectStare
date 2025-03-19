@@ -54,6 +54,15 @@ curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | 
 # Deployment Stages:
 <img width="966" alt="Image" src="https://github.com/user-attachments/assets/ac2998c1-8e46-4afe-8d80-43b467136946" />
 
+Install Trivy on Ubuntu:
+Reference Doc: https://aquasecurity.github.io/trivy/v0.55/getting-started/installation/
+
+sudo apt-get install wget apt-transport-https gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+
 # Jenkins Complete pipeline
 ```
 pipeline {
